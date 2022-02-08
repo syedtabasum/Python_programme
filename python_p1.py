@@ -1,15 +1,28 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Jan 26 15:19:41 2022
-
-@author: sytabasu
-"""
+import pandas as pd
 import xml.etree.ElementTree as ET 
 import os
 from pathlib import Path
 import shutil
 
-rootdir =r'C:\Users\sytabasu\Desktop\SAMPLE WORK\SAMPLEWork'
+def excelsheet():
+        cols = ["LOG", "DATE", "VERDICT"]
+        rows = []
+
+        tree = ET.parse('./tc_log.xml')
+        root = tree.getroot()
+        for e in root:
+                name = e.find("LOG").text
+                date = e.find("DATE").text
+                status = e.find("VERDICT").text
+                    
+                rows.append({"name": name, 
+                          "date": date,
+                          "status": status})
+
+        df = pd.DataFrame(rows, columns = cols) 
+        df.to_csv('./xml_test.csv')
+
+rootdir =r'.\SAMPLEWork'
 string1="Final Verdict:INCONC"
 
 for file in os.listdir(rootdir):
@@ -32,4 +45,5 @@ for file in os.listdir(rootdir):
                         
                 tree.write(path)
 print("Process Completed")
-                
+excelsheet()              
+
